@@ -1,0 +1,23 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Restart app with PM2
+      run: |
+        if pm2 list | grep -q "nodeapp"; then
+          pm2 restart nodeapp
+        else
+          pm2 start app.js --name nodeapp
+        fi
